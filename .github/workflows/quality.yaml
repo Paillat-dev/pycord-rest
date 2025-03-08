@@ -20,14 +20,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        check: [format, lint]
+        check: [format, lint, basedpyright]
         include:
           - check: format
             name: "Format Check"
-            command: "uv run ruff format --check ."
+            command: "uv run ruff format --check src"
           - check: lint
             name: "Lint Check"
-            command: "uv run ruff check ."
+            command: "uv run ruff check src"
+          - check: basedpyright
+            name: "Type Check"
+            command: "uv run basedpyright src"
 
     name: ${{ matrix.name }}
 

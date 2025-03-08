@@ -10,7 +10,6 @@ import aiohttp
 import discord
 import uvicorn
 from discord import Interaction, InteractionType
-from discord.ui.view import ViewStore
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request
 from fastapi.exceptions import FastAPIError
 from nacl.exceptions import BadSignatureError
@@ -198,7 +197,7 @@ class App(discord.Bot):
         self,
         token: str,
         public_key: str,
-        uvicorn_options: dict[str, Any] | None = None,
+        uvicorn_options: dict[str, Any] | None = None,  # pyright: ignore [reportExplicitAny]
         health: bool = True,
     ) -> None:
         await self.login(token)
