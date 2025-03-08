@@ -14,8 +14,10 @@ This project is built on:
 ## Installation
 
 ```bash
-pip install pycord-reactive-bot
+pip install pycord-reactive-bot --prerelease=allow
 ```
+
+Currently, the package is in pre-release, so you need to use the `--prerelease=allow` flag to install it.
 
 ## Quick Start
 
