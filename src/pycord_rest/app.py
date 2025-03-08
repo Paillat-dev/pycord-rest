@@ -19,34 +19,10 @@ from nacl.signing import VerifyKey
 logger = logging.getLogger("pycord.rest")
 
 
-async def _dispatch_view(view_store: ViewStore, component_type: int, custom_id: str, interaction: Interaction) -> None:
-    # Code taken from ViewStore.dispatch
-    view_store._ViewStore__verify_integrity()  # noqa: SLF001  # pyright: ignore [reportUnknownMemberType, reportAttributeAccessIssue]
-    message_id: int | None = interaction.message and interaction.message.id
-    key = (component_type, message_id, custom_id)
-    value = view_store._views.get(key) or view_store._views.get(  # pyright: ignore [reportUnknownVariableType, reportUnknownMemberType, reportPrivateUsage]  # noqa: SLF001
-        (component_type, None, custom_id)
-    )
-    if value is None:
-        return
-
-    view, item = value  # pyright: ignore [reportUnknownVariableType]
-    item.refresh_state(interaction)
-
-    # Code taken from View._dispatch_item
-    if view._View__stopped.done():  # noqa: SLF001  # pyright: ignore [reportAttributeAccessIssue, reportUnknownMemberType]
-        return
-
-    if interaction.message:
-        view.message = interaction.message
-
-    await view._scheduled_task(item, interaction)  # noqa: SLF001  # pyright: ignore [reportPrivateUsage, reportUnknownMemberType]
-
-
 class App(discord.Bot):
     def __init__(self, *args: Any, **options: Any) -> None:  # pyright: ignore [reportExplicitAny]
         super().__init__(*args, **options)  # pyright: ignore [reportUnknownMemberType]
-        self.app: FastAPI = FastAPI()
+        self.app: FastAPI = FastAPI(openapi_url=None, docs_url=None, redoc_url=None)
         self.router: APIRouter = APIRouter()
         self.public_key: str | None = None
 
@@ -89,21 +65,31 @@ class App(discord.Bot):
             raise HTTPException(status_code=401, detail="Invalid request signature") from e
 
     async def _process_interaction(self, request: Request) -> dict[str, Any]:  # pyright: ignore [reportExplicitAny]
+        # Code taken from ConnectionState.parse_interaction_create
         data = await request.json()
         interaction = Interaction(data=data, state=self._connection)
-        if data["type"] == 3:  # interaction component
-            custom_id: str = interaction.data["custom_id"]  # pyright: ignore [reportGeneralTypeIssues, reportOptionalSubscript, reportUnknownVariableType]
-            component_type = interaction.data["component_type"]  # pyright: ignore [reportGeneralTypeIssues, reportOptionalSubscript, reportUnknownVariableType]
-            await self._dispatch_view(component_type, custom_id, interaction)  # pyright: ignore [reportUnknownArgumentType]
-
-        if interaction.type == InteractionType.modal_submit:
-            user_id, custom_id = (  # pyright: ignore [reportUnknownVariableType]
-                interaction.user.id,  # pyright: ignore [reportOptionalMemberAccess]
-                interaction.data["custom_id"],  # pyright: ignore [reportGeneralTypeIssues, reportOptionalSubscript]
-            )
-            await self._connection._modal_store.dispatch(user_id, custom_id, interaction)  # pyright: ignore [reportUnknownArgumentType, reportPrivateUsage]  # noqa: SLF001
-        await self.process_application_commands(interaction)
+        match interaction.type:
+            case InteractionType.component:
+                custom_id: str = interaction.data["custom_id"]  # pyright: ignore [reportGeneralTypeIssues, reportOptionalSubscript, reportUnknownVariableType]
+                component_type = interaction.data["component_type"]  # pyright: ignore [reportGeneralTypeIssues, reportOptionalSubscript, reportUnknownVariableType]
+                await self._dispatch_view(component_type, custom_id, interaction)  # pyright: ignore [reportUnknownArgumentType]
+            case InteractionType.modal_submit:
+                user_id, custom_id = (  # pyright: ignore [reportUnknownVariableType]
+                    interaction.user.id,  # pyright: ignore [reportOptionalMemberAccess]
+                    interaction.data["custom_id"],  # pyright: ignore [reportGeneralTypeIssues, reportOptionalSubscript]
+                )
+                await self._connection._modal_store.dispatch(user_id, custom_id, interaction)  # pyright: ignore [reportUnknownArgumentType, reportPrivateUsage]  # noqa: SLF001
+            case InteractionType.ping:
+                return {"type": 1}
+            case InteractionType.application_command | InteractionType.auto_complete:
+                await self.process_application_commands(interaction)
+        self.dispatch("interaction", interaction)
         return {"ok": True}
+
+    @override
+    async def on_interaction(self, *args: Never, **kwargs: Never) -> None:
+        pass
+
 
     @override
     async def process_application_commands(  # noqa: PLR0912
@@ -143,8 +129,8 @@ class App(discord.Bot):
                 return self._bot.dispatch("unknown_application_command", interaction)
 
         if interaction.type is InteractionType.auto_complete:
+            self._bot.dispatch("application_command_auto_complete", interaction, command)
             await super().on_application_command_auto_complete(interaction, command)  # pyright: ignore [reportArgumentType, reportUnknownMemberType]
-            return self._bot.dispatch("application_command_auto_complete", interaction, command)
             return None
 
         ctx = await self.get_application_context(interaction)
