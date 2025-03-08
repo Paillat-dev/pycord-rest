@@ -1,0 +1,77 @@
+[project]
+name = "pycord-rest-bot"
+version = "0.1.0"
+description = "A discord rest-bot wrapper for pycord"
+readme = "README.md"
+authors = [
+    { name = "Paillat-dev", email = "me@paillat.dev" }
+]
+requires-python = "==3.12.*"
+dependencies = [
+    "fastapi>=0.115.11",
+    "orjson>=3.10.15",
+    "py-cord==2.6.1",
+    "pynacl>=1.5.0",
+    "uvicorn>=0.34.0",
+]
+
+
+[dependency-groups]
+dev = [
+    "basedpyright>=1.28.1",
+    "python-dotenv>=1.0.1",
+    "ruff>=0.9.9",
+]
+
+[tool.pyright]
+pythonVersion = "3.12"
+reportAny = false
+
+[tool.ruff]
+target-version = "py312"
+line-length = 120
+indent-width = 4
+
+[tool.ruff.format]
+quote-style = "double"
+
+indent-style = "space"
+
+skip-magic-trailing-comma = false
+
+line-ending = "auto"
+
+docstring-code-format = false
+
+docstring-code-line-length = "dynamic"
+
+[tool.ruff.lint]
+select = ["ALL"]
+per-file-ignores = {}
+extend-ignore = [
+    "N999",
+    "D104",
+    "D100",
+    "D103",
+    "D102",
+    "D101",
+    "D107",
+    "D105",
+    "D106",
+    "ANN401",
+    "TRY003",
+    "EM101",
+    "EM102",
+    "G004",
+    "PTH",
+    "D211",
+    "D213",
+    "COM812",
+    "ISC001",
+    "D203",
+    "FBT001",
+    "FBT002",
+    "PLR2004",
+    "PLR0913",
+    "C901"
+]
