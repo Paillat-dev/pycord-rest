@@ -89,7 +89,6 @@ class App(discord.Bot):
     async def on_interaction(self, *args: Never, **kwargs: Never) -> None:
         pass
 
-
     @override
     async def process_application_commands(  # noqa: PLR0912
         self, interaction: Interaction, auto_sync: bool | None = None
