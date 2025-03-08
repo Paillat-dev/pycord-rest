@@ -60,6 +60,7 @@ exclude = [
 [tool.pyright]
 pythonVersion = "3.12"
 reportAny = false
+executionEnvironments = [{ root = "src/pycord_rest/_version.py", reportDeprecated = false }]
 
 [tool.ruff]
 target-version = "py312"
@@ -68,20 +69,17 @@ indent-width = 4
 
 [tool.ruff.format]
 quote-style = "double"
-
 indent-style = "space"
-
 skip-magic-trailing-comma = false
-
 line-ending = "auto"
-
 docstring-code-format = false
-
 docstring-code-line-length = "dynamic"
+exclude = [
+    "src/pycord_rest/_version.py"
+]
 
 [tool.ruff.lint]
 select = ["ALL"]
-per-file-ignores = {}
 extend-ignore = [
     "N999",
     "D104",
