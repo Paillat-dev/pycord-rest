@@ -1,3 +1,6 @@
+# Copyright (c) Paillat-dev
+# SPDX-License-Identifier: MIT
+
 """Basic Discord bot example using Pycord REST.
 
 This is a minimal example showing how to create slash commands.

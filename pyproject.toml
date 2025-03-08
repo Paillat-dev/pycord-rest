@@ -49,16 +49,18 @@ source_archive = "https://github.com/Paillat-dev/pycord-rest/archive/{commit_has
 name = "pycord-rest-bot"
 
 [tool.hatch.build]
-packages = ["src/pycord_rest"]
+include = [
+    "src/pycord_rest/",
+]
 exclude = [
     ".copywrite.hcl",
     ".github",
     ".python-version",
     "uv.lock",
 ]
-include = [
-    "src/pycord_rest/",
-]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pycord_rest"]
 
 [tool.pyright]
 pythonVersion = "3.12"

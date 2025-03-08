@@ -1,3 +1,6 @@
+# Copyright (c) Paillat-dev
+# SPDX-License-Identifier: MIT
+
 """Example showing how to work with modals in Pycord REST."""
 
 import asyncio

@@ -1,3 +1,6 @@
+# Copyright (c) Paillat-dev
+# SPDX-License-Identifier: MIT
+
 """Example demonstrating how to use buttons with Pycord REST."""
 
 import os
