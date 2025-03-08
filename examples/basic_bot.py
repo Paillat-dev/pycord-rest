@@ -7,7 +7,6 @@ This is a minimal example showing how to create slash commands.
 """
 
 import os
-from pydoc import describe
 
 import discord
 from dotenv import load_dotenv

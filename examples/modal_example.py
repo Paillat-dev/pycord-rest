@@ -3,7 +3,6 @@
 
 """Example showing how to work with modals in Pycord REST."""
 
-import asyncio
 import os
 from typing import Any
 

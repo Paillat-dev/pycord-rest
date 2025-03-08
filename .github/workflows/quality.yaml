@@ -24,13 +24,13 @@ jobs:
         include:
           - check: format
             name: "Format Check"
-            command: "uv run ruff format --check src"
+            command: "uv run ruff format --check ."
           - check: lint
             name: "Lint Check"
-            command: "uv run ruff check src"
+            command: "uv run ruff check ."
           - check: basedpyright
             name: "Type Check"
-            command: "uv run basedpyright src"
+            command: "uv run basedpyright ."
 
     name: ${{ matrix.name }}
 
