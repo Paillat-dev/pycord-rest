@@ -23,6 +23,16 @@ dev = [
     "ruff>=0.9.9",
 ]
 
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatchling]
+name = "pycord-rest-bot"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/pycord_rest"]
+
 [tool.pyright]
 pythonVersion = "3.12"
 reportAny = false
@@ -75,3 +85,6 @@ extend-ignore = [
     "PLR0913",
     "C901"
 ]
+
+[tool.uv.workspace]
+members = ["test"]
