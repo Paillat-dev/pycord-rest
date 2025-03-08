@@ -14,7 +14,7 @@ This project is built on:
 ## Installation
 
 ```bash
-pip install pycord-reactive-bot
+pip install pycord-rest-bot
 ```
 
 ## Quick Start
@@ -78,8 +78,8 @@ async def button(ctx):
 This library works differently than traditional bots because it does not use Discord's WebSocket gateway:
 
 - **No Cache**: Since there's no gateway connection, there's no cache of guilds, channels, users, etc.
-- **Limited API Methods**: Many standard Discord.py/py-cord methods that rely on cache won't work properly:
-  - `app.get_channel()`, `app.get_guild()`, `app.get_user()`
+- **Limited API Methods**: Many standard py-cord methods that rely on cache won't work properly:
+  - `app.get_channel()`, `app.get_guild()`, `app.get_user()`, etc.
   - Presence updates
   - Voice support
   - Member tracking
