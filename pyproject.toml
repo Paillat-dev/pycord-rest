@@ -1,12 +1,22 @@
 [project]
 name = "pycord-rest-bot"
-version = "0.1.0"
+dynamic = ["version", "urls"]
 description = "A discord rest-bot wrapper for pycord"
 readme = "README.md"
 authors = [
     { name = "Paillat-dev", email = "me@paillat.dev" }
 ]
+license = "MIT"
 requires-python = "==3.12.*"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12"
+]
+keywords = ["discord", "bot", "rest", "pycord"]
 dependencies = [
     "fastapi>=0.115.11",
     "orjson>=3.10.15",
@@ -14,7 +24,6 @@ dependencies = [
     "pynacl>=1.5.0",
     "uvicorn>=0.34.0",
 ]
-
 
 [dependency-groups]
 dev = [
@@ -24,14 +33,29 @@ dev = [
 ]
 
 [build-system]
-requires = ["hatchling"]
+requires = ["hatchling", "hatch-vcs"]
 build-backend = "hatchling.build"
+
+[tool.hatch.version]
+source = "vcs"
+
+[tool.hatch.build.hooks.vcs]
+version-file = "src/pycord_rest/_version.py"
+
+[tool.hatch.metadata.hooks.vcs.urls]
+Homepage = "https://github.com/Paillat-dev/pycord-rest"
+source_archive = "https://github.com/Paillat-dev/pycord-rest/archive/{commit_hash}.zip"
 
 [tool.hatchling]
 name = "pycord-rest-bot"
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/pycord_rest"]
+[tool.hatch.build]
+exclude = [
+    ".copywrite.hcl",
+    ".github",
+    ".python-version",
+    "uv.lock",
+]
 
 [tool.pyright]
 pythonVersion = "3.12"
@@ -85,6 +109,3 @@ extend-ignore = [
     "PLR0913",
     "C901"
 ]
-
-[tool.uv.workspace]
-members = ["test"]
