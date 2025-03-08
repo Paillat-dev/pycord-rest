@@ -298,7 +298,7 @@ wheels = [
 ]
 
 [[package]]
-name = "pycord-rest"
+name = "pycord-rest-bot"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
