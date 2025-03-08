@@ -14,7 +14,7 @@ This project is built on:
 ## Installation
 
 ```bash
-pip install pycord-rest-bot
+pip install pycord-reactive-bot
 ```
 
 ## Quick Start
@@ -39,6 +39,25 @@ if __name__ == "__main__":
         }
     )
 ```
+
+For more examples, check out the [examples directory](/examples) which includes:
+- Basic slash command setup
+- Button interactions
+- Modal forms
+- Production deployment configurations
+
+## How It Works
+
+Under the hood, Pycord REST creates an HTTP server using FastAPI and Uvicorn that:
+
+1. Listens for incoming Discord interaction requests on your specified endpoint
+2. Verifies the request signature using your application's public key
+3. Routes the interaction to the appropriate command handler
+4. Returns the response back to Discord
+
+Unlike traditional Discord bots that maintain a persistent WebSocket connection to Discord's gateway, HTTP-based bots:
+- Only wake up when an interaction is received
+- Don't receive real-time events from Discord
 
 ## Usage
 
@@ -94,14 +113,24 @@ app.run(
     token="YOUR_BOT_TOKEN",
     public_key="YOUR_PUBLIC_KEY",
     uvicorn_options={
-        "host": "0.0.0.0",
-        "port": 8000,
-        "log_level": "info",
+        "host": "0.0.0.0",  # Listen on all network interfaces
+        "port": 8000,        # Port to listen on
+        "log_level": "info", # Uvicorn logging level
         # Any valid uvicorn server options
     },
     health=True  # Enable /health endpoint
 )
 ```
+
+### Server Configuration
+
+For Discord to reach your bot, you need a publicly accessible HTTPS URL. Options include:
+- Using a VPS with a domain and SSL certificate
+- Deploying to a cloud service like Heroku, Railway, or Fly.io
+
+### Health Check
+
+By default, Pycord REST includes a `/health` endpoint that returns a 200 status code. This endpoint is useful for monitoring services like UptimeRobot or health checks.
 
 ## Advanced Usage
 
@@ -114,6 +143,24 @@ from fastapi import Request
 async def custom_endpoint(request: Request):
     return {"message": "This is a custom endpoint"}
 ```
+
+## Development Workflow
+
+For faster development and testing, you can use tunneling tools to expose your local development server:
+
+- **ngrok** - Creates a secure tunnel to your localhost
+  ```bash
+  # Install ngrok
+  npm install -g ngrok
+  
+  # Expose your local server
+  ngrok http 8000
+  ```
+
+- **Cloudflare Tunnel** - Provides a secure connection to your local server
+- **localtunnel** - Simple tunnel service for exposing local endpoints
+
+These tools provide temporary URLs that you can use in the Discord Developer Portal during development, allowing you to test changes quickly without deploying to production.
 
 ## Contributing
 
