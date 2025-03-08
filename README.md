@@ -46,7 +46,6 @@ For more examples, check out the [examples directory](/examples) which includes:
 - Basic slash command setup
 - Button interactions
 - Modal forms
-- Production deployment configurations
 
 ## How It Works
 
