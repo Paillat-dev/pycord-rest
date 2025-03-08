@@ -56,6 +56,9 @@ exclude = [
     ".python-version",
     "uv.lock",
 ]
+include = [
+    "src/pycord_rest/",
+]
 
 [tool.pyright]
 pythonVersion = "3.12"
