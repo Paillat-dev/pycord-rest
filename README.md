@@ -1,21 +1,41 @@
 # Pycord REST
 
-A lightweight wrapper for Discord's HTTP interactions using py-cord and FastAPI. This
-library enables you to build Discord bots that work exclusively through Discord's HTTP
-interactions, without requiring a WebSocket gateway connection.
+A lightweight wrapper for Discord's HTTP interactions and webhook events using py-cord
+and FastAPI.
 
-## About
+## Table of Contents
 
-Pycord REST allows you to build Discord bots that respond to interactions via HTTP
-endpoints as described in
-[Discord's interaction documentation](https://discord.com/developers/docs/interactions/receiving-and-responding)
-and
-[interaction overview](https://discord.com/developers/docs/interactions/overview#preparing-for-interactions).
+- [Overview](#overview)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Core Concepts](#core-concepts)
+  - [How It Works](#how-it-works)
+  - [Discord Application Setup](#discord-application-setup)
+- [Features](#features)
+  - [Interaction Handling](#interaction-handling)
+  - [Webhook Events](#webhook-events)
+- [Usage Examples](#usage-examples)
+  - [Basic Commands](#basic-commands)
+  - [Event Handling](#event-handling)
+  - [Custom Routes](#custom-routes)
+- [Configuration](#configuration)
+- [Limitations](#limitations)
+- [Development](#development)
+  - [Local Testing](#local-testing)
+  - [Contributing](#contributing)
+- [License](#license)
 
-This project is built on:
+## Overview
 
-- **FastAPI** - For handling the HTTP server
-- **py-cord** - Leveraging Discord command builders and interaction handling
+Pycord REST enables you to build Discord applications that respond to:
+
+- **Interactions** via HTTP endpoints (slash commands, components, modals)
+- **Webhook events** such as application authorization and entitlements
+
+Built on:
+
+- **FastAPI** - For handling HTTP requests
+- **py-cord** - For Discord command builders and interaction handling
 - **uvicorn** - ASGI server implementation
 
 ## Installation
@@ -24,8 +44,9 @@ This project is built on:
 pip install pycord-rest-bot --prerelease=allow
 ```
 
-Currently, the package is in pre-release, so you need to use the `--prerelease=allow`
-flag to install it.
+<!-- prettier-ignore -->
+> [!NOTE]
+> The package is currently in pre-release.
 
 ## Quick Start
 
@@ -50,48 +71,68 @@ if __name__ == "__main__":
     )
 ```
 
-For more examples, check out the [examples directory](/examples) which includes:
+## Core Concepts
 
-- Basic slash command setup
-- Button interactions
-- Modal forms
+### How It Works
 
-## How It Works
+Pycord REST creates an HTTP server that:
 
-Under the hood, Pycord REST creates an HTTP server using FastAPI and Uvicorn that:
+1. Listens for Discord interaction requests and webhook events
+2. Verifies request signatures using your application's public key
+3. Routes events to appropriate handlers
+4. Returns responses back to Discord
 
-1. Listens for incoming Discord interaction requests on your specified endpoint
-2. Verifies the request signature using your application's public key
-3. Routes the interaction to the appropriate command handler
-4. Returns the response back to Discord
+Unlike traditional WebSocket-based Discord bots, HTTP-based applications:
 
-Unlike traditional Discord bots that maintain a persistent WebSocket connection to
-Discord's gateway, HTTP-based bots:
+- Only wake up when receiving interactions or webhook events
+- Don't maintain a persistent connection to Discord's gateway
+- Don't receive most real-time Discord events
 
-- Only wake up when an interaction is received
-- Don't receive real-time events from Discord
+### Discord Application Setup
 
-## Usage
-
-### Setting up your bot on Discord
-
-1. Create a bot on the
+1. Create an application on the
    [Discord Developer Portal](https://discord.com/developers/applications)
-2. Enable the "Interactions Endpoint URL" for your application
-3. Set the URL to your public endpoint where your bot will receive interactions
-4. Copy your public key from the Developer Portal to verify signatures
+2. Copy your public key to verify signatures
+3. Run your FastAPI server
+4. Configure the endpoints:
 
-### Features
+- **Interactions Endpoint URL** - For slash commands and component interactions
+  (`https://example.com`)
+- **Webhook URL** - For receiving application events (e.g.,
+  `https://example.com/webhook`)
 
-- Slash Commands
-- UI Components (buttons, select menus)
-- Modal interactions
-- Autocomplete for commands
+<!-- prettier-ignore -->
+> [!IMPORTANT]
+> Don't forget to run your FastAPI server **before** setting up the application on Discord, or else Discord won't be able to verify the endpoints.
 
-### Similarities to py-cord
+## Features
 
-Syntax is equivalent to py-cord, as it is what is being used under the hood, making it
-easy to adapt existing bots:
+### Interaction Handling
+
+Respond to Discord interactions such as:
+
+- **Slash Commands** - Create and respond to application commands
+- **UI Components** - Buttons, select menus, and other interactive elements
+- **Modal Forms** - Pop-up forms for gathering user input
+- **Autocomplete** - Dynamic option suggestions as users type
+
+### Webhook Events
+
+Handle Discord webhook events such as:
+
+- **Application authorization** - When your app is added to a guild or authorized by a
+  user
+- **Entitlement creation** - When a user subscribes to your app's premium features
+
+## Usage Examples
+
+<!-- prettier-ignore -->
+> [!TIP]
+> For complete examples, check out the [examples directory](/examples).
+
+### Basic Commands
+
+Commands use the familiar py-cord syntax:
 
 ```python
 @app.slash_command(name="hello", description="Say hello")
@@ -106,57 +147,28 @@ async def button(ctx):
     await ctx.respond("Press the button!", view=view)
 ```
 
-## Limitations
+### Event Handling
 
-This library works differently than traditional bots because it does not use Discord's
-WebSocket gateway:
+The possible events are:
 
-- **No Cache**: Since there's no gateway connection, there's no cache of guilds,
-  channels, users, etc.
-- **Limited API Methods**: Many standard py-cord methods that rely on cache won't work
-  properly:
-  - `app.get_channel()`, `app.get_guild()`, `app.get_user()`, etc.
-  - Presence updates
-  - Voice support
-  - Member tracking
-- **Event-Based Functions**: Only interaction-based events work; message events, etc.
-  don't work
+- `on_application_authorized` - When your app is added to a guild or authorized by a
+  user
+- `on_entitlement_create` - When a user subscribes to your app's premium features
 
-Remember that this is an HTTP-only bot that responds exclusively to interactions
-triggered by users.
-
-## Configuration Options
+<!-- prettier-ignore -->
+> [!NOTE]
+> For application installation events, use `on_application_authorized` instead of `on_guild_join`.
 
 ```python
-app.run(
-    token="YOUR_BOT_TOKEN",
-    public_key="YOUR_PUBLIC_KEY",
-    uvicorn_options={
-        "host": "0.0.0.0",  # Listen on all network interfaces
-        "port": 8000,        # Port to listen on
-        "log_level": "info", # Uvicorn logging level
-        # Any valid uvicorn server options
-    },
-    health=True  # Enable /health endpoint
-)
+@app.listen("on_application_authorized")
+async def on_application_authorized(event: ApplicationAuthorizedEvent):
+    # Triggers when app is added to a guild OR when a user authorizes your app
+    print(f"Authorization received: Guild={event.guild}, User={event.user}")
 ```
 
-### Server Configuration
+### Custom Routes
 
-For Discord to reach your bot, you need a publicly accessible HTTPS URL. Options
-include:
-
-- Using a VPS with a domain and SSL certificate
-- Deploying to a cloud service like Heroku, Railway, or Fly.io
-
-### Health Check
-
-By default, Pycord REST includes a `/health` endpoint that returns a 200 status code.
-This endpoint is useful for monitoring services like UptimeRobot or health checks.
-
-## Advanced Usage
-
-### Adding Custom FastAPI Routes
+Add your own FastAPI routes:
 
 ```python
 from fastapi import Request
@@ -166,12 +178,47 @@ async def custom_endpoint(request: Request):
     return {"message": "This is a custom endpoint"}
 ```
 
-## Development Workflow
+## Configuration
 
-For faster development and testing, you can use tunneling tools to expose your local
-development server:
+```python
+app.run(
+    token="YOUR_BOT_TOKEN",
+    public_key="YOUR_PUBLIC_KEY",
+    uvicorn_options={
+        "host": "0.0.0.0",  # Listen on all network interfaces
+        "port": 8000,        # Port to listen on
+        "log_level": "info", # Uvicorn logging level
+    },
+    health=True  # Enable /health endpoint for monitoring
+)
+```
 
-- **ngrok** - Creates a secure tunnel to your localhost
+### Integration Options
+
+1. **Stand-alone HTTP Interaction Bot** - Commands and components only
+2. **Webhook Event Handler Only** - Process application events alongside a separate
+   gateway bot
+3. **Full HTTP Application** - Handle both interactions and webhook events
+
+## Limitations
+
+Since Pycord REST doesn't use Discord's WebSocket gateway:
+
+- **No Cache** - No local storage of guilds, channels, or users
+- **Limited API Methods** - Functions that rely on cache won't work:
+  - `app.get_channel()`, `app.get_guild()`, `app.get_user()`
+  - Presence updates
+  - Voice support
+  - Member tracking
+- **Limited Events** - Only interaction-based and webhook events work
+
+## Development
+
+### Local Testing
+
+Use tunneling tools to expose your local development server:
+
+- **ngrok**:
 
   ```bash
   # Install ngrok
@@ -181,34 +228,28 @@ development server:
   ngrok http 8000
   ```
 
-- **Cloudflare Tunnel** - Provides a secure connection to your local server
-- **localtunnel** - Simple tunnel service for exposing local endpoints
+- **Cloudflare Tunnel** or **localtunnel** - Alternative tunneling options
 
-These tools provide temporary URLs that you can use in the Discord Developer Portal
-during development, allowing you to test changes quickly without deploying to
-production.
+These tools provide temporary URLs for testing without deploying to production.
 
-## Contributing
-
-Contributions are welcome! This project is in early development, so there might be bugs
-or unexpected behaviors.
+### Contributing
 
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Run tests and linting: `ruff check` and `ruff format`
+4. Run linter, formatter and type checker: `ruff check .`,`ruff format .`,
+   `basedpyright .`
 5. Submit a pull request
 
-### Development Tools
+**Development Tools**:
 
 - **Ruff**: For linting and formatting
 - **HashiCorp Copywrite**: For managing license headers
 - **basedpyright**: For type checking
 
-## Disclaimer
-
-This is an early-stage project and may have unexpected behaviors or bugs. Please report
-any issues you encounter.
+<!-- prettier-ignore -->
+> [!NOTE]
+> This is an early-stage project and may have unexpected behaviors or bugs. Please report any issues you encounter.
 
 ## License
 
@@ -216,4 +257,4 @@ MIT License - Copyright (c) 2025 Paillat-dev
 
 ---
 
-Made with ❤️ by Paillat-dev
+Made with :red_heart: by Paillat-dev
