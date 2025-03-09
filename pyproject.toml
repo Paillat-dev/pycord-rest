@@ -17,7 +17,9 @@ classifiers = [
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.12"
+    "Programming Language :: Python :: 3.12",
+    "Typing :: Typed",
+    "Operating System :: OS Independent",
 ]
 keywords = ["discord", "bot", "rest", "pycord"]
 dependencies = [
