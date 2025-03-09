@@ -1,7 +1,17 @@
-# Pycord REST
+<div align="center">
+  <h1>Pycord REST</h1>
+
+![PyPI - Version](https://img.shields.io/pypi/v/pycord-rest-bot)
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pycord-rest-bot)
+![PyPI - Types](https://img.shields.io/pypi/types/pycord-rest-bot)
+![PyPI - License](https://img.shields.io/pypi/l/pycord-rest-bot)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Paillat-dev/pycord-rest/CI.yaml)
+[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Paillat-dev/pycord-rest/main.svg)](https://results.pre-commit.ci/latest/github/Paillat-dev/pycord-rest/main)
 
 A lightweight wrapper for Discord's HTTP interactions and webhook events using py-cord
 and FastAPI.
+
+</div>
 
 ## Table of Contents
 
@@ -14,6 +24,7 @@ and FastAPI.
 - [Features](#features)
   - [Interaction Handling](#interaction-handling)
   - [Webhook Events](#webhook-events)
+  - [Type Safety](#type-safety)
 - [Usage Examples](#usage-examples)
   - [Basic Commands](#basic-commands)
   - [Event Handling](#event-handling)
@@ -123,6 +134,15 @@ Handle Discord webhook events such as:
 - **Application authorization** - When your app is added to a guild or authorized by a
   user
 - **Entitlement creation** - When a user subscribes to your app's premium features
+
+### Type Safety
+
+Pycord REST is fully type-annotated and type-safe. It uses `basedpyright` for type
+checking.
+
+<!-- prettier-ignore -->
+> [!NOTE]
+> While Pycord REST itself is fully typed, the underlying py-cord library has limited type annotations, which may affect type checking in some areas.
 
 ## Usage Examples
 
@@ -243,6 +263,7 @@ These tools provide temporary URLs for testing without deploying to production.
 
 **Development Tools**:
 
+- **uv**: For dependency management
 - **Ruff**: For linting and formatting
 - **HashiCorp Copywrite**: For managing license headers
 - **basedpyright**: For type checking
