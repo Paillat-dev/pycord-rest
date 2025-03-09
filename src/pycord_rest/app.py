@@ -11,7 +11,6 @@ import discord
 import uvicorn
 from discord import Entitlement, Interaction, InteractionType
 from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request, Response
-from fastapi.exceptions import FastAPIError
 from nacl.exceptions import BadSignatureError
 from nacl.signing import VerifyKey
 
@@ -35,18 +34,26 @@ class ApplicationAuthorizedEvent:
         )
 
 
+class PycordRestError(discord.DiscordException):
+    pass
+
+
+class InvalidCredentialsError(PycordRestError):
+    pass
+
+
 class App(discord.Bot):
     def __init__(self, *args: Any, **options: Any) -> None:  # pyright: ignore [reportExplicitAny]
         super().__init__(*args, **options)  # pyright: ignore [reportUnknownMemberType]
-        self.app: FastAPI = FastAPI(openapi_url=None, docs_url=None, redoc_url=None)
+        self._app: FastAPI = FastAPI(openapi_url=None, docs_url=None, redoc_url=None)
         self.router: APIRouter = APIRouter()
-        self.public_key: str | None = None
+        self._public_key: str | None = None
 
     @cached_property
     def _verify_key(self) -> VerifyKey:
-        if self.public_key is None:
-            raise FastAPIError("No public key provided")
-        return VerifyKey(bytes.fromhex(self.public_key))
+        if self._public_key is None:
+            raise InvalidCredentialsError("No public key provided")
+        return VerifyKey(bytes.fromhex(self._public_key))
 
     async def _dispatch_view(self, component_type: int, custom_id: str, interaction: Interaction) -> None:
         # Code taken from ViewStore.dispatch
@@ -110,6 +117,7 @@ class App(discord.Bot):
     async def process_application_commands(  # noqa: PLR0912
         self, interaction: Interaction, auto_sync: bool | None = None
     ) -> None:
+        # Code taken from super().process_application_commands
         if auto_sync is None:
             auto_sync = self._bot.auto_sync_commands  # pyright: ignore [reportUnknownVariableType, reportUnknownMemberType]
         # TODO: find out why the isinstance check below doesn't stop the type errors below  # noqa: FIX002, TD002, TD003
@@ -145,7 +153,7 @@ class App(discord.Bot):
 
         if interaction.type is InteractionType.auto_complete:
             self._bot.dispatch("application_command_auto_complete", interaction, command)
-            await super().on_application_command_auto_complete(interaction, command)  # pyright: ignore [reportArgumentType, reportUnknownMemberType]
+            await super().s(interaction, command)  # pyright: ignore [reportArgumentType, reportUnknownMemberType]
             return None
 
         ctx = await self.get_application_context(interaction)
@@ -231,15 +239,15 @@ class App(discord.Bot):
         uvicorn_options: dict[str, Any] | None = None,  # pyright: ignore [reportExplicitAny]
         health: bool = True,
     ) -> None:
-        self.public_key = public_key
+        self._public_key = public_key
         _ = self._process_interaction_factory()
         _ = self._webhook_event_factory()
         if health:
             _ = self._health_factory()
-        self.app.include_router(self.router)
+        self._app.include_router(self.router)
         uvicorn_options = uvicorn_options or {}
         uvicorn_options["log_level"] = uvicorn_options.get("log_level", logging.root.level)
-        config = uvicorn.Config(self.app, **uvicorn_options)
+        config = uvicorn.Config(self._app, **uvicorn_options)
         server = uvicorn.Server(config)
         try:
             self.dispatch("connect")
@@ -260,6 +268,10 @@ class App(discord.Bot):
         uvicorn_options: dict[str, Any] | None = None,  # pyright: ignore [reportExplicitAny]
         health: bool = True,
     ) -> None:
+        if not token:
+            raise InvalidCredentialsError("No token provided")
+        if not public_key:
+            raise InvalidCredentialsError("No public key provided")
         await self.login(token)
         await self.connect(
             token=token,
