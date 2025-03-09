@@ -25,7 +25,7 @@ Currently, the package is in pre-release, so you need to use the `--prerelease=a
 from pycord_rest import App
 import discord
 
-app = App(intents=discord.Intents.default())
+app = App()
 
 @app.slash_command(name="ping", description="Responds with pong!")
 async def ping(ctx):
