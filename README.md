@@ -257,4 +257,4 @@ MIT License - Copyright (c) 2025 Paillat-dev
 
 ---
 
-Made with :red_heart: by Paillat-dev
+Made with ❤ by Paillat-dev
