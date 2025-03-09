@@ -105,7 +105,7 @@ Unlike traditional WebSocket-based Discord bots, HTTP-based applications:
 1. Create an application on the
    [Discord Developer Portal](https://discord.com/developers/applications)
 2. Copy your public key to verify signatures
-3. Run your FastAPI server
+3. Run the Pycord REST app
 4. Configure the endpoints:
 
 - **Interactions Endpoint URL** - For slash commands and component interactions
