@@ -1,12 +1,8 @@
 # Copyright (c) Paillat-dev
 # SPDX-License-Identifier: MIT
 
-"""Basic Discord bot example using Pycord REST.
+"""Example showing how to work with webhook events in Pycord REST."""
 
-This is a minimal example showing how to create slash commands.
-"""
-
-import logging
 import os
 
 from dotenv import load_dotenv
@@ -15,10 +11,6 @@ from pycord_rest import App, ApplicationAuthorizedEvent
 
 # Load environment variables from .env file
 load_dotenv()
-
-
-# Set up logging
-logging.basicConfig(level=logging.DEBUG)
 
 app = App()
 
@@ -31,7 +23,7 @@ async def on_application_authorized(event: ApplicationAuthorizedEvent) -> None:
 
     else:
         print(
-            f"Bot {event.user.display_name} ({event.user.id}) installed the application"  # noqa: ISC003
+            f"Bot {event.user.display_name} ({event.user.id}) installed the application"
             + f" to guild {event.guild.name} ({event.guild.id})."
         )
 
