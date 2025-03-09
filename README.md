@@ -1,12 +1,19 @@
 # Pycord REST
 
-A lightweight wrapper for Discord's HTTP interactions using py-cord and FastAPI. This library enables you to build Discord bots that work exclusively through Discord's HTTP interactions, without requiring a WebSocket gateway connection.
+A lightweight wrapper for Discord's HTTP interactions using py-cord and FastAPI. This
+library enables you to build Discord bots that work exclusively through Discord's HTTP
+interactions, without requiring a WebSocket gateway connection.
 
 ## About
 
-Pycord REST allows you to build Discord bots that respond to interactions via HTTP endpoints as described in [Discord's interaction documentation](https://discord.com/developers/docs/interactions/receiving-and-responding) and [interaction overview](https://discord.com/developers/docs/interactions/overview#preparing-for-interactions).
+Pycord REST allows you to build Discord bots that respond to interactions via HTTP
+endpoints as described in
+[Discord's interaction documentation](https://discord.com/developers/docs/interactions/receiving-and-responding)
+and
+[interaction overview](https://discord.com/developers/docs/interactions/overview#preparing-for-interactions).
 
 This project is built on:
+
 - **FastAPI** - For handling the HTTP server
 - **py-cord** - Leveraging Discord command builders and interaction handling
 - **uvicorn** - ASGI server implementation
@@ -17,7 +24,8 @@ This project is built on:
 pip install pycord-rest-bot --prerelease=allow
 ```
 
-Currently, the package is in pre-release, so you need to use the `--prerelease=allow` flag to install it.
+Currently, the package is in pre-release, so you need to use the `--prerelease=allow`
+flag to install it.
 
 ## Quick Start
 
@@ -43,6 +51,7 @@ if __name__ == "__main__":
 ```
 
 For more examples, check out the [examples directory](/examples) which includes:
+
 - Basic slash command setup
 - Button interactions
 - Modal forms
@@ -56,7 +65,9 @@ Under the hood, Pycord REST creates an HTTP server using FastAPI and Uvicorn tha
 3. Routes the interaction to the appropriate command handler
 4. Returns the response back to Discord
 
-Unlike traditional Discord bots that maintain a persistent WebSocket connection to Discord's gateway, HTTP-based bots:
+Unlike traditional Discord bots that maintain a persistent WebSocket connection to
+Discord's gateway, HTTP-based bots:
+
 - Only wake up when an interaction is received
 - Don't receive real-time events from Discord
 
@@ -64,8 +75,9 @@ Unlike traditional Discord bots that maintain a persistent WebSocket connection 
 
 ### Setting up your bot on Discord
 
-1. Create a bot on the [Discord Developer Portal](https://discord.com/developers/applications)
-2. Enable the "Interactions Endpoint URL" for your application 
+1. Create a bot on the
+   [Discord Developer Portal](https://discord.com/developers/applications)
+2. Enable the "Interactions Endpoint URL" for your application
 3. Set the URL to your public endpoint where your bot will receive interactions
 4. Copy your public key from the Developer Portal to verify signatures
 
@@ -78,7 +90,8 @@ Unlike traditional Discord bots that maintain a persistent WebSocket connection 
 
 ### Similarities to py-cord
 
-Syntax is equivalent to py-cord, as it is what is being used under the hood, making it easy to adapt existing bots:
+Syntax is equivalent to py-cord, as it is what is being used under the hood, making it
+easy to adapt existing bots:
 
 ```python
 @app.slash_command(name="hello", description="Say hello")
@@ -95,17 +108,22 @@ async def button(ctx):
 
 ## Limitations
 
-This library works differently than traditional bots because it does not use Discord's WebSocket gateway:
+This library works differently than traditional bots because it does not use Discord's
+WebSocket gateway:
 
-- **No Cache**: Since there's no gateway connection, there's no cache of guilds, channels, users, etc.
-- **Limited API Methods**: Many standard py-cord methods that rely on cache won't work properly:
+- **No Cache**: Since there's no gateway connection, there's no cache of guilds,
+  channels, users, etc.
+- **Limited API Methods**: Many standard py-cord methods that rely on cache won't work
+  properly:
   - `app.get_channel()`, `app.get_guild()`, `app.get_user()`, etc.
   - Presence updates
   - Voice support
   - Member tracking
-- **Event-Based Functions**: Only interaction-based events work; message events, etc. don't work
+- **Event-Based Functions**: Only interaction-based events work; message events, etc.
+  don't work
 
-Remember that this is an HTTP-only bot that responds exclusively to interactions triggered by users.
+Remember that this is an HTTP-only bot that responds exclusively to interactions
+triggered by users.
 
 ## Configuration Options
 
@@ -125,13 +143,16 @@ app.run(
 
 ### Server Configuration
 
-For Discord to reach your bot, you need a publicly accessible HTTPS URL. Options include:
+For Discord to reach your bot, you need a publicly accessible HTTPS URL. Options
+include:
+
 - Using a VPS with a domain and SSL certificate
 - Deploying to a cloud service like Heroku, Railway, or Fly.io
 
 ### Health Check
 
-By default, Pycord REST includes a `/health` endpoint that returns a 200 status code. This endpoint is useful for monitoring services like UptimeRobot or health checks.
+By default, Pycord REST includes a `/health` endpoint that returns a 200 status code.
+This endpoint is useful for monitoring services like UptimeRobot or health checks.
 
 ## Advanced Usage
 
@@ -147,13 +168,15 @@ async def custom_endpoint(request: Request):
 
 ## Development Workflow
 
-For faster development and testing, you can use tunneling tools to expose your local development server:
+For faster development and testing, you can use tunneling tools to expose your local
+development server:
 
 - **ngrok** - Creates a secure tunnel to your localhost
+
   ```bash
   # Install ngrok
   npm install -g ngrok
-  
+
   # Expose your local server
   ngrok http 8000
   ```
@@ -161,11 +184,14 @@ For faster development and testing, you can use tunneling tools to expose your l
 - **Cloudflare Tunnel** - Provides a secure connection to your local server
 - **localtunnel** - Simple tunnel service for exposing local endpoints
 
-These tools provide temporary URLs that you can use in the Discord Developer Portal during development, allowing you to test changes quickly without deploying to production.
+These tools provide temporary URLs that you can use in the Discord Developer Portal
+during development, allowing you to test changes quickly without deploying to
+production.
 
 ## Contributing
 
-Contributions are welcome! This project is in early development, so there might be bugs or unexpected behaviors.
+Contributions are welcome! This project is in early development, so there might be bugs
+or unexpected behaviors.
 
 1. Fork the repository
 2. Create a feature branch
@@ -181,7 +207,8 @@ Contributions are welcome! This project is in early development, so there might 
 
 ## Disclaimer
 
-This is an early-stage project and may have unexpected behaviors or bugs. Please report any issues you encounter.
+This is an early-stage project and may have unexpected behaviors or bugs. Please report
+any issues you encounter.
 
 ## License
 
