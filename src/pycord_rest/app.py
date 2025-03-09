@@ -9,13 +9,30 @@ from typing import Any, Never, override
 import aiohttp
 import discord
 import uvicorn
-from discord import Interaction, InteractionType
-from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request
+from discord import Entitlement, Interaction, InteractionType
+from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request, Response
 from fastapi.exceptions import FastAPIError
 from nacl.exceptions import BadSignatureError
 from nacl.signing import VerifyKey
 
+from .models import EventType, WebhookEventPayload, WebhookType
+
 logger = logging.getLogger("pycord.rest")
+
+
+class ApplicationAuthorizedEvent:
+    def __init__(self, user: discord.User, guild: discord.Guild | None, type: discord.IntegrationType) -> None:  # noqa: A002
+        self.type: discord.IntegrationType = type
+        self.user: discord.User = user
+        self.guild: discord.Guild | None = guild
+
+    @override
+    def __repr__(self) -> str:
+        return (
+            f"<ApplicationAuthorizedEvent type={self.type} user={self.user}"
+            + (f" guild={self.guild}" if self.guild else "")
+            + ">"
+        )
 
 
 class App(discord.Bot):
@@ -162,6 +179,50 @@ class App(discord.Bot):
 
         return health
 
+    async def _handle_webhook_event(self, data: dict[str, Any] | None, event_type: EventType) -> None:  # pyright: ignore [reportExplicitAny]
+        if not data:
+            raise HTTPException(status_code=400, detail="Missing event data")
+
+        match event_type:
+            case EventType.APPLICATION_AUTHORIZED:
+                event = ApplicationAuthorizedEvent(
+                    user=discord.User(state=self._connection, data=data["user"]),
+                    guild=(discord.Guild(state=self._connection, data=data["guild"]) if data.get("guild") else None),
+                    type=discord.IntegrationType.guild_install
+                    if data.get("guild")
+                    else discord.IntegrationType.user_install,
+                )
+                logger.debug("Dispatching application_authorized event")
+                self.dispatch("application_authorized", event)
+                if event.type == discord.IntegrationType.guild_install:
+                    self.dispatch("guild_join", event.guild)
+            case EventType.ENTITLEMENT_CREATE:
+                entitlement = Entitlement(data=data, state=self._connection)  # pyright: ignore [reportArgumentType]
+                logger.debug("Dispatching entitlement_create event")
+                self.dispatch("entitlement_create", entitlement)
+            case _:
+                logger.warning(f"Unsupported webhook event type received: {event_type}")
+
+    async def _webhook_event(self, payload: WebhookEventPayload) -> Response | dict[str, Any]:  # pyright: ignore [reportExplicitAny]
+        match payload.type:
+            case WebhookType.PING:
+                return Response(status_code=204)
+            case WebhookType.Event:
+                if not payload.event:
+                    raise HTTPException(status_code=400, detail="Missing event data")
+                await self._handle_webhook_event(payload.event.data, payload.event.type)
+
+        return {"ok": True}
+
+    def _webhook_event_factory(
+        self,
+    ) -> Callable[[WebhookEventPayload], Coroutine[Any, Any, Response | dict[str, Any]]]:  # pyright: ignore [reportExplicitAny]
+        @self.router.post("/webhook", dependencies=[Depends(self._verify_request)], response_model=None)
+        async def webhook_event(payload: WebhookEventPayload) -> Response | dict[str, Any]:  # pyright: ignore [reportExplicitAny]
+            return await self._webhook_event(payload)
+
+        return webhook_event
+
     @override
     async def connect(  # pyright: ignore [reportIncompatibleMethodOverride]
         self,
@@ -172,7 +233,7 @@ class App(discord.Bot):
     ) -> None:
         self.public_key = public_key
         _ = self._process_interaction_factory()
-        self.app.include_router(self.router)
+        _ = self._webhook_event_factory()
         if health:
             _ = self._health_factory()
         self.app.include_router(self.router)
