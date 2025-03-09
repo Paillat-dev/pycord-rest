@@ -90,7 +90,7 @@ exclude = [
 
 [tool.ruff.lint]
 select = ["ALL"]
-per-file-ignores = { "examples/**/*" = ["INP001", "ARG002"] }
+per-file-ignores = { "examples/**/*" = ["INP001", "ARG002", "T201"] }
 extend-ignore = [
     "N999",
     "D104",
