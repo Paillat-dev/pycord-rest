@@ -31,6 +31,7 @@ and FastAPI.
   - [Custom Routes](#custom-routes)
 - [Configuration](#configuration)
 - [Limitations](#limitations)
+- [Getting Help](#getting-help)
 - [Development](#development)
   - [Local Testing](#local-testing)
   - [Contributing](#contributing)
@@ -231,6 +232,22 @@ Since Pycord REST doesn't use Discord's WebSocket gateway:
   - Voice support
   - Member tracking
 - **Limited Events** - Only interaction-based and webhook events work
+
+## Getting Help
+
+If you encounter issues or have questions about pycord-rest:
+
+- **GitHub Issues**:
+  [Submit a bug report or feature request](https://github.com/Paillat-dev/pycord-rest/issues)
+- **Discord Support**:
+  - For py-cord related questions: Join the
+    [Pycord Official Server](https://discord.gg/pycord)
+  - For pycord-rest specific help: Join the
+    [Pycord Official Server](https://discord.gg/pycord) and mention `@paillat`
+
+<!-- prettier-ignore -->
+> [!TIP]
+> Before asking for help, check if your question is already answered in the [examples directory](/examples) or existing GitHub issues.
 
 ## Development
 
