@@ -153,7 +153,7 @@ class App(discord.Bot):
 
         if interaction.type is InteractionType.auto_complete:
             self._bot.dispatch("application_command_auto_complete", interaction, command)
-            await super().s(interaction, command)  # pyright: ignore [reportArgumentType, reportUnknownMemberType]
+            await super().on_application_command_auto_complete(interaction, command)  # pyright: ignore [reportArgumentType, reportUnknownMemberType]
             return None
 
         ctx = await self.get_application_context(interaction)
