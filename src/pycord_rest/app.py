@@ -3,6 +3,7 @@
 
 import functools
 import logging
+import warnings
 from collections.abc import Callable, Coroutine
 from functools import cached_property
 from typing import Any, Never, override
@@ -40,6 +41,11 @@ def not_supported[T, U](func: Callable[[T], U]) -> Callable[[T], U]:
     @functools.wraps(func)
     def inner(*args: T, **kwargs: T) -> U:
         logger.warning(f"{func.__qualname__} is not supported by REST apps.")
+        warnings.warn(
+            f"{func.__qualname__} is not supported by REST apps.",
+            SyntaxWarning,
+            stacklevel=2,
+        )
         return func(*args, **kwargs)
 
     return inner
