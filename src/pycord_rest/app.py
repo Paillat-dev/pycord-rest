@@ -57,10 +57,10 @@ class App(discord.Bot):
     _FastAPI: type[FastAPI] = FastAPI
     _APIRouter: type[APIRouter] = APIRouter
 
-    def __init__(self, *args: Any, **options: Any) -> None:  # pyright: ignore [reportExplicitAny]
+    def __init__(self, *args: Any, path_prefix: str = "", **options: Any) -> None:  # pyright: ignore [reportExplicitAny]
         super().__init__(*args, **options)  # pyright: ignore [reportUnknownMemberType]
         self._app: FastAPI = self._FastAPI(openapi_url=None, docs_url=None, redoc_url=None)
-        self.router: APIRouter = self._APIRouter()
+        self.router: APIRouter = self._APIRouter(prefix=path_prefix)
         self._public_key: str | None = None
 
     @property
