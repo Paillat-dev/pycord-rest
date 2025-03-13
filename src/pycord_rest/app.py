@@ -285,7 +285,10 @@ class App(discord.Bot):
 
     @override
     async def close(self) -> None:
-        pass
+        self._closed: bool = True
+
+        await self.http.close()
+        self._ready.clear()
 
     @override
     async def start(  # pyright: ignore [reportIncompatibleMethodOverride]
