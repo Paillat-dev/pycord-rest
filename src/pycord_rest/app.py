@@ -1,6 +1,7 @@
 # Copyright (c) Paillat-dev
 # SPDX-License-Identifier: MIT
 
+import functools
 import logging
 from collections.abc import Callable, Coroutine
 from functools import cached_property
@@ -42,6 +43,15 @@ class InvalidCredentialsError(PycordRestError):
     pass
 
 
+def not_supported[T, U](func: Callable[[T], U]) -> Callable[[T], U]:
+    @functools.wraps(func)
+    def inner(*args: T, **kwargs: T) -> U:
+        logger.warning(f"{func.__qualname__} is not supported by REST apps.")
+        return func(*args, **kwargs)
+
+    return inner
+
+
 class App(discord.Bot):
     _UvicornConfig: type[uvicorn.Config] = uvicorn.Config
     _UvicornServer: type[uvicorn.Server] = uvicorn.Server
@@ -53,6 +63,12 @@ class App(discord.Bot):
         self._app: FastAPI = self._FastAPI(openapi_url=None, docs_url=None, redoc_url=None)
         self.router: APIRouter = self._APIRouter()
         self._public_key: str | None = None
+
+    @property
+    @override
+    @not_supported
+    def latency(self) -> float:
+        return 0.0
 
     @cached_property
     def _verify_key(self) -> VerifyKey:
