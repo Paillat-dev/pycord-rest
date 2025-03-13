@@ -16,6 +16,7 @@ from fastapi import APIRouter, Depends, FastAPI, HTTPException, Request, Respons
 from nacl.exceptions import BadSignatureError
 from nacl.signing import VerifyKey
 
+from .errors import InvalidCredentialsError
 from .models import EventType, WebhookEventPayload, WebhookType
 
 logger = logging.getLogger("pycord.rest")
@@ -34,14 +35,6 @@ class ApplicationAuthorizedEvent:
             + (f" guild={self.guild}" if self.guild else "")
             + ">"
         )
-
-
-class PycordRestError(discord.DiscordException):
-    pass
-
-
-class InvalidCredentialsError(PycordRestError):
-    pass
 
 
 def not_supported[T, U](func: Callable[[T], U]) -> Callable[[T], U]:
