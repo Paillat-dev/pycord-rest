@@ -1,6 +1,8 @@
 <div align="center">
   <h1>Pycord REST</h1>
 
+<!-- badges -->
+
 [![PyPI - Version](https://img.shields.io/pypi/v/pycord-rest-bot)](https://pypi.org/project/pycord-rest-bot/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pycord-rest-bot)](https://pypi.org/project/pycord-rest-bot/)
 [![PyPI - Types](https://img.shields.io/pypi/types/pycord-rest-bot)](https://pypi.org/project/pycord-rest-bot/)
@@ -8,10 +10,18 @@
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Paillat-dev/pycord-rest/CI.yaml)](https://github.com/Paillat-dev/pycord-rest/actions/workflows/CI.yaml)
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Paillat-dev/pycord-rest/main.svg)](https://results.pre-commit.ci/latest/github/Paillat-dev/pycord-rest/main)
 
+<!-- end badges -->
+
+<!-- short description -->
+
 A lightweight wrapper for Discord's HTTP interactions and webhook events using py-cord
 and FastAPI.
 
+<!-- end short description -->
+
 </div>
+
+<!-- toc -->
 
 ## Table of Contents
 
@@ -59,6 +69,8 @@ pip install pycord-rest-bot --prerelease=allow
 <!-- prettier-ignore -->
 > [!NOTE]
 > The package is currently in pre-release.
+
+<!-- quick-start -->
 
 ## Quick Start
 
