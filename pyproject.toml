@@ -1,12 +1,11 @@
 [build-system]
-requires = ["hatchling", "hatch-vcs"]
+requires = ["hatchling", "hatch-vcs", "hatch-fancy-pypi-readme"]
 build-backend = "hatchling.build"
 
 [project]
 name = "pycord-rest-bot"
-dynamic = ["version", "urls"]
-description = "A discord rest-bot wrapper for pycord"
-readme = "README.md"
+dynamic = ["version", "urls", "readme"]
+description = "A lightweight wrapper for Discord's HTTP interactions and webhook events using py-cord and FastAPI"
 authors = [
     { name = "Paillat-dev", email = "me@paillat.dev" }
 ]
@@ -46,6 +45,34 @@ version-file = "src/pycord_rest/_version.py"
 [tool.hatch.metadata.hooks.vcs.urls]
 Homepage = "https://github.com/Paillat-dev/pycord-rest"
 source_archive = "https://github.com/Paillat-dev/pycord-rest/archive/{commit_hash}.zip"
+
+[tool.hatch.metadata.hooks.fancy-pypi-readme]
+content-type = "text/markdown"
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
+path = "README.md"
+start-after = "<!-- badges -->\n"
+end-before = "\n<!-- end badges -->"
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
+text = "\n\n---\n"
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
+path = "README.md"
+start-after = "## Overview\n"
+end-before = "\n## Installation"
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.fragments]]
+path = "README.md"
+start-after = "<!-- quick-start -->"
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
+pattern = '\[(.+?)\]\(((?!https?://)\S+?)\)'
+replacement = '[\1](https://github.com/Paillat-dev/pycord-rest/tree/main\g<2>)'
+
+[[tool.hatch.metadata.hooks.fancy-pypi-readme.substitutions]]
+pattern = '\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]'
+replacement = '**\1**:'
 
 [tool.hatchling]
 name = "pycord-rest-bot"
