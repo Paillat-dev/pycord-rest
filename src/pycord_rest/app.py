@@ -43,10 +43,15 @@ class InvalidCredentialsError(PycordRestError):
 
 
 class App(discord.Bot):
+    _UvicornConfig: type[uvicorn.Config] = uvicorn.Config
+    _UvicornServer: type[uvicorn.Server] = uvicorn.Server
+    _FastAPI: type[FastAPI] = FastAPI
+    _APIRouter: type[APIRouter] = APIRouter
+
     def __init__(self, *args: Any, **options: Any) -> None:  # pyright: ignore [reportExplicitAny]
         super().__init__(*args, **options)  # pyright: ignore [reportUnknownMemberType]
-        self._app: FastAPI = FastAPI(openapi_url=None, docs_url=None, redoc_url=None)
-        self.router: APIRouter = APIRouter()
+        self._app: FastAPI = self._FastAPI(openapi_url=None, docs_url=None, redoc_url=None)
+        self.router: APIRouter = self._APIRouter()
         self._public_key: str | None = None
 
     @cached_property
@@ -247,8 +252,8 @@ class App(discord.Bot):
         self._app.include_router(self.router)
         uvicorn_options = uvicorn_options or {}
         uvicorn_options["log_level"] = uvicorn_options.get("log_level", logging.root.level)
-        config = uvicorn.Config(self._app, **uvicorn_options)
-        server = uvicorn.Server(config)
+        config = self._UvicornConfig(self._app, **uvicorn_options)
+        server = self._UvicornServer(config)
         try:
             self.dispatch("connect")
             await server.serve()
