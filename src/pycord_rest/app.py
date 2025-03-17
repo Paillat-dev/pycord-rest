@@ -267,6 +267,7 @@ class App(discord.Bot):
         self._app.include_router(self.router)
         uvicorn_options = uvicorn_options or {}
         uvicorn_options["log_level"] = uvicorn_options.get("log_level", logging.root.level)
+        uvicorn_options["server_header"] = uvicorn_options.get("server_header", False)
         config = self._UvicornConfig(self._app, **uvicorn_options)
         server = self._UvicornServer(config)
         try:
