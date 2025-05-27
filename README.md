@@ -63,12 +63,8 @@ Built on:
 ## Installation
 
 ```bash
-pip install pycord-rest-bot --prerelease=allow
+pip install pycord-rest-bot
 ```
-
-<!-- prettier-ignore -->
-> [!NOTE]
-> The package is currently in pre-release.
 
 <!-- quick-start -->
 
