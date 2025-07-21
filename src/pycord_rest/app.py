@@ -80,13 +80,13 @@ class App(discord.Bot):
         self._connection._view_store._ViewStore__verify_integrity()  # noqa: SLF001  # pyright: ignore [reportUnknownMemberType, reportAttributeAccessIssue, reportPrivateUsage]
         message_id: int | None = interaction.message and interaction.message.id
         key = (component_type, message_id, custom_id)
-        value = self._connection._view_store._views.get(key) or self._connection._view_store._views.get(  # pyright: ignore [reportUnknownVariableType, reportUnknownMemberType, reportPrivateUsage]  # noqa: SLF001
+        value = self._connection._view_store._views.get(key) or self._connection._view_store._views.get(  # pyright: ignore [reportPrivateUsage]  # noqa: SLF001
             (component_type, None, custom_id)
         )
         if value is None:
             return
 
-        view, item = value  # pyright: ignore [reportUnknownVariableType]
+        view, item = value
         item.refresh_state(interaction)
 
         # Code taken from View._dispatch_item
@@ -96,7 +96,7 @@ class App(discord.Bot):
         if interaction.message:
             view.message = interaction.message
 
-        await view._scheduled_task(item, interaction)  # noqa: SLF001  # pyright: ignore [reportPrivateUsage, reportUnknownMemberType]
+        await view._scheduled_task(item, interaction)  # noqa: SLF001 # pyright: ignore [reportPrivateUsage]
 
     async def _verify_request(self, request: Request) -> None:
         signature = request.headers["X-Signature-Ed25519"]

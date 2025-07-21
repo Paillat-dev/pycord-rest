@@ -21,7 +21,7 @@ class MyView(discord.ui.View):
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
         self.add_item(
-            discord.ui.Button(
+            discord.ui.Button(  # pyright: ignore[reportUnknownArgumentType]
                 style=discord.ButtonStyle.link, label="GitHub", url="https://github.com/Paillat-dev/pycord-rest"
             )
         )
