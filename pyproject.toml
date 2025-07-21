@@ -24,7 +24,7 @@ keywords = ["discord", "bot", "rest", "pycord"]
 dependencies = [
     "fastapi>=0.115.11",
     "orjson>=3.10.15",
-    "py-cord>=2.6.1",
+    "paillcord>=2.7.0a3",
     "pynacl>=1.5.0",
     "uvicorn>=0.34.0",
 ]

@@ -261,6 +261,19 @@ wheels = [
 ]
 
 [[package]]
+name = "paillcord"
+version = "2.7.0a3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "aiohttp" },
+    { name = "typing-extensions" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/5f/23/ae29cedaa6822d85b553407f7287fb355cb85ad9fefa10454aee11b6c256/paillcord-2.7.0a3.tar.gz", hash = "sha256:32e46935a72ef4df1619f551b1464ba21c59db9b524dfe87177c8003510caec1", size = 974819 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c4/da/da5f56051c68e4b749d7b54a6b27aa27b7968a6a4787ff9b49184a88f717/paillcord-2.7.0a3-py3-none-any.whl", hash = "sha256:76f553b48075ff633b7f6182e6238ff374bb7c55e512c9384dfea7bd546dd609", size = 1117883 },
+]
+
+[[package]]
 name = "propcache"
 version = "0.3.0"
 source = { registry = "https://pypi.org/simple" }
@@ -286,24 +299,12 @@ wheels = [
 ]
 
 [[package]]
-name = "py-cord"
-version = "2.6.1"
-source = { registry = "https://pypi.org/simple" }
-dependencies = [
-    { name = "aiohttp" },
-]
-sdist = { url = "https://files.pythonhosted.org/packages/27/c7/c539d69d5cfa1ea5891d596212f73d619e40c7fc9f02ae906f4147993b94/py_cord-2.6.1.tar.gz", hash = "sha256:36064f225f2c7bbddfe542d5ed581f2a5744f618e039093cf7cd2659a58bc79b", size = 965087 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/e7/90/2690ded84e34b15ca2619932a358c1b7dc6d28fe845dfbd01929fc33c9da/py_cord-2.6.1-py3-none-any.whl", hash = "sha256:e3d3b528c5e37b0e0825f5b884cbb9267860976c1e4878e28b55da8fd3af834b", size = 1089154 },
-]
-
-[[package]]
 name = "pycord-rest-bot"
 source = { editable = "." }
 dependencies = [
     { name = "fastapi" },
     { name = "orjson" },
-    { name = "py-cord" },
+    { name = "paillcord" },
     { name = "pynacl" },
     { name = "uvicorn" },
 ]
@@ -319,7 +320,7 @@ dev = [
 requires-dist = [
     { name = "fastapi", specifier = ">=0.115.11" },
     { name = "orjson", specifier = ">=3.10.15" },
-    { name = "py-cord", specifier = ">=2.6.1" },
+    { name = "paillcord", specifier = ">=2.7.0a3" },
     { name = "pynacl", specifier = ">=1.5.0" },
     { name = "uvicorn", specifier = ">=0.34.0" },
 ]
