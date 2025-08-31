@@ -6,7 +6,7 @@
     ":dependencyDashboard"
   ],
   "forkProcessing": "enabled",
-  "baseBranchPatterns": ["dev"],
+  "baseBranchPatterns": ["main"],
   "lockFileMaintenance": {
     "enabled": true
   }
