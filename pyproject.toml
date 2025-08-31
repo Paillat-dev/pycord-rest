@@ -98,7 +98,7 @@ reportUnusedCallResult = false
 reportAny = false
 executionEnvironments = [
     { root = "src/pycord_rest/_version.py", reportDeprecated = false },
-    { root = "examples", reportExplicitAny = false, reportUnknownMemberType = false, reportUnusedParameter = false, reportImplicitOverride = false }
+    { root = "examples", reportExplicitAny = false, reportUnknownMemberType = false, reportUnusedParameter = false, reportImplicitOverride = false, reportAttributeAccessIssue = false, reportUnknownVariableType = false },
 ]
 
 [tool.ruff]
