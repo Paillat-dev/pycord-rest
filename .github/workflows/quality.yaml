@@ -11,7 +11,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v5
       - name: Setup Copywrite
-        uses: hashicorp/setup-copywrite@32f9f1c86f661b8a51100768976a06f1b281a035
+        uses: hashicorp/setup-copywrite@06dc9998df8c64dde19b3b5d22dad1da60bb081d
       - name: Check Header Compliance
         run: copywrite headers --plan --config .copywrite.hcl
 
