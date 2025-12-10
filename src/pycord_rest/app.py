@@ -1,6 +1,7 @@
 # Copyright (c) Paillat-dev
 # SPDX-License-Identifier: MIT
 
+import base64
 import functools
 import logging
 import warnings
@@ -270,6 +271,7 @@ class App(discord.Bot):
         uvicorn_options["server_header"] = uvicorn_options.get("server_header", False)
         config = self._UvicornConfig(self._app, **uvicorn_options)
         server = self._UvicornServer(config)
+        self._connection.application_id = int(base64.b64decode(token.split(".")[0] + "==").decode("utf-8"))
         try:
             self.dispatch("connect")
             await server.serve()
