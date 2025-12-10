@@ -91,7 +91,7 @@ class App(discord.Bot):
         item.refresh_state(interaction)
 
         # Code taken from View._dispatch_item
-        if view._View__stopped.done():  # noqa: SLF001  # pyright: ignore [reportAttributeAccessIssue, reportUnknownMemberType]
+        if view._stopped.done():  # noqa: SLF001  # pyright: ignore [reportPrivateUsage]
             return
 
         if interaction.message:
