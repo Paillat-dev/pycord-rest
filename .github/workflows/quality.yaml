@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# Copyright: 2024-2026 Paillat-dev
 name: Quality Checks
 
 on:
@@ -9,11 +11,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
-      - name: Setup Copywrite
-        uses: hashicorp/setup-copywrite@32f9f1c86f661b8a51100768976a06f1b281a035
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+      - name: Setup Licensor
+        uses: nicebots-xyz/licensor/.github/actions/setup-licensor@20ff71ae4c0ca9874893c11c7c2cbdb9d22e179e # v0.1.0
+        with:
+          version: v0.1.0
       - name: Check Header Compliance
-        run: copywrite headers --plan --config .copywrite.hcl
+        run: licensor check * --ignore ".*"
 
   quality:
     runs-on: ubuntu-latest

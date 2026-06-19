@@ -1,3 +1,5 @@
+# SPDX-License-Identifier: MIT
+# Copyright: 2024-2026 Paillat-dev
 [build-system]
 requires = ["hatchling", "hatch-vcs", "hatch-fancy-pypi-readme"]
 build-backend = "hatchling.build"
