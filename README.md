@@ -1,3 +1,7 @@
+<!--
+SPDX-License-Identifier: MIT
+Copyright: 2024-2026 Paillat-dev
+-->
 <div align="center">
   <h1>Pycord REST</h1>
 
@@ -8,7 +12,6 @@
 [![PyPI - Types](https://img.shields.io/pypi/types/pycord-rest-bot)](https://pypi.org/project/pycord-rest-bot/)
 [![PyPI - License](https://img.shields.io/pypi/l/pycord-rest-bot)](https://pypi.org/project/pycord-rest-bot/)
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/Paillat-dev/pycord-rest/CI.yaml)](https://github.com/Paillat-dev/pycord-rest/actions/workflows/CI.yaml)
-[![pre-commit.ci status](https://results.pre-commit.ci/badge/github/Paillat-dev/pycord-rest/main.svg)](https://results.pre-commit.ci/latest/github/Paillat-dev/pycord-rest/main)
 
 <!-- end badges -->
 

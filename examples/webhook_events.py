@@ -1,5 +1,5 @@
-# Copyright (c) Paillat-dev
 # SPDX-License-Identifier: MIT
+# Copyright: 2024-2026 Paillat-dev
 
 """Example showing how to work with webhook events in Pycord REST."""
 
