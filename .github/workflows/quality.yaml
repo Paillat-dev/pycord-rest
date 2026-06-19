@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
       - name: Setup Licensor
         uses: nicebots-xyz/licensor/.github/actions/setup-licensor@20ff71ae4c0ca9874893c11c7c2cbdb9d22e179e # v0.1.0
         with:
@@ -39,7 +39,7 @@ jobs:
     name: ${{ matrix.name }}
 
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
 
       - name: "Install uv"
         uses: astral-sh/setup-uv@v7
