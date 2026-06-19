@@ -271,7 +271,7 @@ class App(discord.Bot):
         uvicorn_options["server_header"] = uvicorn_options.get("server_header", False)
         config = self._UvicornConfig(self._app, **uvicorn_options)
         server = self._UvicornServer(config)
-        self._connection.application_id = int(base64.b64decode(token.split(".")[0] + "==").decode("utf-8"))
+        self._connection.application_id = int(base64.b64decode(token.split(".", maxsplit=1)[0] + "==").decode("utf-8"))
 
         if self._connection.cache_app_emojis and self.application_id:
             data = await self.http.get_all_application_emojis(self.application_id)
