@@ -272,6 +272,12 @@ class App(discord.Bot):
         config = self._UvicornConfig(self._app, **uvicorn_options)
         server = self._UvicornServer(config)
         self._connection.application_id = int(base64.b64decode(token.split(".")[0] + "==").decode("utf-8"))
+
+        if self._connection.cache_app_emojis and self.application_id:
+            data = await self.http.get_all_application_emojis(self.application_id)
+            for e in data.get("items", []):  # pyright: ignore[reportUnknownVariableType, reportUnknownMemberType, reportAttributeAccessIssue]
+                self._connection.maybe_store_app_emoji(self.application_id, e)  # pyright: ignore[reportUnknownArgumentType]
+
         try:
             self.dispatch("connect")
             await server.serve()
