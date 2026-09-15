@@ -100,9 +100,14 @@ class App(discord.Bot):
         await view._scheduled_task(item, interaction)  # noqa: SLF001 # pyright: ignore [reportPrivateUsage]
 
     async def _verify_request(self, request: Request) -> None:
-        signature = request.headers["X-Signature-Ed25519"]
-        timestamp = request.headers["X-Signature-Timestamp"]
+        try:
+            signature = request.headers["X-Signature-Ed25519"]
+            timestamp = request.headers["X-Signature-Timestamp"]
+        except KeyError as e:
+            raise HTTPException(status_code=400, detail="Bad request") from e
+
         body = (await request.body()).decode("utf-8")
+
         try:
             _ = self._verify_key.verify(f"{timestamp}{body}".encode(), bytes.fromhex(signature))
         except BadSignatureError as e:
