@@ -79,18 +79,17 @@ import discord
 
 app = App()
 
+
 @app.slash_command(name="ping", description="Responds with pong!")
 async def ping(ctx):
     await ctx.respond("Pong!")
+
 
 if __name__ == "__main__":
     app.run(
         token="YOUR_BOT_TOKEN",
         public_key="YOUR_PUBLIC_KEY",  # From Discord Developer Portal
-        uvicorn_options={
-            "host": "0.0.0.0",
-            "port": 8000
-        }
+        uvicorn_options={"host": "0.0.0.0", "port": 8000},
     )
 ```
 
@@ -172,6 +171,7 @@ async def hello(ctx, user: discord.Member = None):
     user = user or ctx.author
     await ctx.respond(f"Hello {user.mention}!")
 
+
 @app.slash_command()
 async def button(ctx):
     view = discord.ui.View()
@@ -205,6 +205,7 @@ Add your own FastAPI routes:
 ```python
 from fastapi import Request
 
+
 @app.router.get("/custom")
 async def custom_endpoint(request: Request):
     return {"message": "This is a custom endpoint"}
@@ -218,10 +219,10 @@ app.run(
     public_key="YOUR_PUBLIC_KEY",
     uvicorn_options={
         "host": "0.0.0.0",  # Listen on all network interfaces
-        "port": 8000,        # Port to listen on
-        "log_level": "info", # Uvicorn logging level
+        "port": 8000,  # Port to listen on
+        "log_level": "info",  # Uvicorn logging level
     },
-    health=True  # Enable /health endpoint for monitoring
+    health=True,  # Enable /health endpoint for monitoring
 )
 ```
 
